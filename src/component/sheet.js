@@ -10,6 +10,7 @@ import Table from './table';
 import Toolbar from './toolbar';
 import { cssPrefix } from '../config';
 import { formulas } from '../core/formula';
+import Filter from './filter';
 
 function scrollbarMove() {
   const {
@@ -178,13 +179,16 @@ function horizontalScrollbarSet() {
 
 function sheetFreeze() {
   const {
-    selector, data, editor,
+    selector, data, editor,filter,
   } = this;
   const [ri, ci] = data.freeze;
   if (ri > 0 || ci > 0) {
     const fwidth = data.freezeTotalWidth();
     const fheight = data.freezeTotalHeight();
     editor.setFreezeLengths(fwidth, fheight);
+    if(filter){
+    filter.setFreezeLengths(fwidth, fheight);
+    }
   }
   selector.resetAreaOffset();
 }
@@ -311,6 +315,7 @@ function verticalScrollbarMove(distance) {
   data.scrolly(distance, () => {
     selector.resetBRLAreaOffset();
     editorSetOffset.call(this);
+    filterSetoffset.call(this);
     table.render();
   });
 }
@@ -320,8 +325,17 @@ function horizontalScrollbarMove(distance) {
   data.scrollx(distance, () => {
     selector.resetBRTAreaOffset();
     editorSetOffset.call(this);
+    filterSetoffset.call(this);
     table.render();
   });
+}
+
+
+function filterSetoffset(){
+    if(this.filter){
+      this.filter.clear.call(this.filter);
+      this.filter.setOffset.call(this.filter);
+    }
 }
 
 function rowResizerFinished(cRect, distance) {
@@ -374,6 +388,7 @@ function insertDeleteRowColumn(type) {
 }
 
 function toolbarChange(type, value) {
+  console.info(type);
   const { data } = this;
   if (type === 'undo') {
     this.undo();
@@ -391,6 +406,15 @@ function toolbarChange(type, value) {
   } else if (type === 'chart') {
     // chart
   } else if (type === 'filter') {
+
+    if(this.filter){
+      this.filter.clear.call(this.filter);
+
+    }
+    this.filter = new Filter(data,
+      () => this.getTableOffset(),
+      this.overlayerEl);
+
     // filter
   } else if (type === 'freeze') {
     if (value) {
@@ -691,6 +715,8 @@ export default class Sheet {
     sheetReset.call(this);
     // init selector [0, 0]
     selectorSet.call(this, false, 0, 0);
+
+
   }
 
   loadData(data) {

@@ -139,7 +139,7 @@ export default class Toolbar {
       this.fontBoldEl = buildButtonWithIcon(`${t('toolbar.fontBold')} (Ctrl+B)`, 'bold', () => toggleChange.call(this, 'font-bold')),
       this.fontItalicEl = buildButtonWithIcon(`${t('toolbar.fontItalic')} (Ctrl+I)`, 'italic', () => toggleChange.call(this, 'font-italic')),
       this.underlineEl = buildButtonWithIcon(`${t('toolbar.underline')} (Ctrl+U)`, 'underline', () => toggleChange.call(this, 'underline')),
-      this.striketEl = buildButtonWithIcon(`${t('toolbar.strike')}`, 'strike', () => toggleChange.call(this, 'strike')),
+      this.strikeEl = buildButtonWithIcon(`${t('toolbar.strike')}`, 'strike', () => toggleChange.call(this, 'strike')),
       buildButton(`${t('toolbar.textColor')}`).child(this.ddTextColor.el),
       buildDivider(),
       buildButton(`${t('toolbar.fillColor')}`).child(this.ddFillColor.el),
@@ -152,7 +152,8 @@ export default class Toolbar {
       buildDivider(),
       // this.linkEl = buildButtonWithIcon('Insert link', 'link'),
       // this.chartEl = buildButtonWithIcon('Insert chart', 'chart'),
-      // this.autofilterEl = buildButtonWithIcon('Filter', 'autofilter'),
+      this.autofilterEl = buildButtonWithIcon('Filter', 'autofilter',() => this.change('filter')),
+
       this.freezeEl = buildButtonWithIcon(`${t('toolbar.freeze')}`, 'freeze', () => toggleChange.call(this, 'freeze')),
       buildButton(`${t('toolbar.formula')}`).child(this.ddFormula.el),
       // buildDivider(),
@@ -201,7 +202,7 @@ export default class Toolbar {
     this.fontBoldEl.active(font.bold);
     this.fontItalicEl.active(font.italic);
     this.underlineEl.active(style.underline);
-    this.striketEl.active(style.strike);
+    this.strikeEl.active(style.strike);
     this.ddTextColor.setTitle(style.color);
     this.ddFillColor.setTitle(style.bgcolor);
     this.ddAlign.setTitle(style.align);
