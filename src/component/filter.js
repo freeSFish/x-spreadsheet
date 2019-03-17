@@ -1,5 +1,9 @@
 import { h } from './element';
 import { cssPrefix } from '../config';
+import FilterMenu from './filtermenu';
+import Icon from './icon';
+
+const $ = require('jquery');
 
 function dpr() {
   
@@ -19,55 +23,127 @@ function offset(){
 
 }
 
+
+function buildButton(tooltipdata) {
+  return h('div', `${cssPrefix}-menu-btn`)
+    .on('mouseenter', (evt) => {
+       
+    });
+    
+}
+function buildIcon(name) {
+  return new Icon(name);
+}
+function buildButtonWithIcon(tooltipdata, iconName, change = () => {}) {
+  return buildButton(tooltipdata)
+    .child(buildIcon(iconName))
+    .on('click', () => change());
+}
+
 function drawbtn(cellbox,i){
-	const {data} = this;
-	
-    this.btn[i].ctx = this.btn[i].el.getContext("2d");
+  
+	const {data,table} = this;
+
+  console.info("drawbtn cellbox",i,this.order);
+ 
+    i= parseInt(i);
+        
     this.areaEl[i].children( this.btn[i]);
     this.layerEl.children(this.areaEl[i]);
 
-    this.btn[i].ctx.scale(dpr(), dpr());
-    //this.btn[i].ctx.fillStyle = '#A9A9A9';
-    this.btn[i].ctx.strokeStyle = '#A9A9A9';
-    this.btn[i].ctx.lineWidth = npx(2);
+    if(this.ctx[i]==null) {   
+      console.info("::draw filter is null");
+      this.ctx[i] = this.btn[i].el.getContext("2d"); 
+    }
+    this.ctx[i].clearRect(0,0,npx(17),npx(17));
+    this.ctx[i].scale(dpr(), dpr());
+	  if(this.order){
+      if(parseInt(this.order.key)==i){
+        console.info("::draw filter btn");
+         
+       // const filterimg ='<g xmlns="http://www.w3.org/2000/svg" transform="translate(0,0)"><path fill="#000000" fill-rule="evenodd" d="M0,0 L0,1 L6,7 L6,12 L8,11 L8,7 L14,1 L14,0 L0,0 Z M4,3 L10,3 L7,6 L4,3 Z" transform="translate(2 3)"/></g>';
+        
+
+        //this.ctx[i].scale(dpr(), dpr());
+        //this.ctx[i].clearRect(0,0,npx(17),npx(17));
+
+       //this.btn[i].el.classList.remove("filter-down");
+       //this.btn[i].el.classList.add("autofilter");
+       //this.ctx[i].restore();
+       this.ctx[i].strokeStyle = '#A9A9A9';
+       this.ctx[i].lineWidth = npx(2);
+       this.ctx[i].beginPath();
+       this.ctx[i].moveTo(npx(8.5), npx(9.5));
+       this.ctx[i].lineTo(npx(2.5), npx(3.5));
+       this.ctx[i].lineTo(npx(14.5), npx(3.5));
+       this.ctx[i].lineTo(npx(8.5), npx(9.5));
+       this.ctx[i].lineTo(npx(8.5), npx(17));
+       this.ctx[i].lineTo(npx(17), npx(17)); 
+       this.ctx[i].lineTo(npx(17), npx(0)); 
+       this.ctx[i].lineTo(npx(0), npx(0)); 
+       this.ctx[i].lineTo(npx(0), npx(17)); 
+       this.ctx[i].lineTo(npx(8.5), npx(17));
+       this.ctx[i].closePath();
+       this.ctx[i].stroke();
+       this.ctx[i].save();
+        return;
+      }
+    }
+    //this.btn[i].el.classList.remove("autofilter");
+    //this.btn[i].el.classList.add("filter-down");
+    //$(this.btn[i].el).removeClass("autofilter");
+    //$(this.btn[i].el).addClass("filter-down");
+    //$.parser.parse();
+   
+    
+
+    
+    
+    //this.ctx[i].fillStyle = '#A9A9A9';
+   
+    this.ctx[i].strokeStyle = '#A9A9A9';
+    this.ctx[i].lineWidth = npx(2);
    
   
 
-    //this.btn[i].ctx.rect(0, 0, npx(17),npx(17));
-    //this.btn[i].ctx.stroke();
+    //this.ctx[i].rect(0, 0, npx(17),npx(17));
+    //this.ctx[i].stroke();
      
 
-    this.btn[i].ctx.fillStyle = '#a8a9aa';
-    this.btn[i].ctx.strokeStyle = '#a8a9aa';
-    this.btn[i].ctx.lineWidth = npx(2);
-    this.btn[i].ctx.moveTo(npx(8.5), npx(10.5));
-    this.btn[i].ctx.lineTo(npx(5.5), npx(6.5));
-    this.btn[i].ctx.lineTo(npx(11.5), npx(6.5));
+   
+    this.ctx[i].strokeStyle = '#a8a9aa';
+    this.ctx[i].lineWidth = npx(2);
+    this.ctx[i].beginPath();
+    this.ctx[i].moveTo(npx(8.5), npx(10.5));
+    this.ctx[i].lineTo(npx(5.5), npx(6.5));
+    this.ctx[i].lineTo(npx(11.5), npx(6.5));
 
-    this.btn[i].ctx.closePath();
+    this.ctx[i].closePath();
   
-    this.btn[i].ctx.stroke();
-    this.btn[i].ctx.fill();
+    this.ctx[i].stroke();
+    this.ctx[i].fillStyle = '#a8a9aa';
+    this.ctx[i].fill();
 
-     this.btn[i].ctx.save();
-    this.btn[i].ctx.beginPath();
-    this.btn[i].ctx.lineTo(0, 0);
-    this.btn[i].ctx.lineTo(npx(17) , npx(0));
+    this.ctx[i].save();
+    this.ctx[i].beginPath();
+    this.ctx[i].lineTo(0, 0);
+    this.ctx[i].lineTo(npx(17) , npx(0));
     
-    this.btn[i].ctx.lineTo(npx(17),npx(17));
-    this.btn[i].ctx.lineTo(0,npx(17));
-    this.btn[i].ctx.closePath();
-    this.btn[i].ctx.stroke();
-    //this.btn[i].ctx.fill();
-    this.btn[i].ctx.save();
-
-    
+    this.ctx[i].lineTo(npx(17),npx(17));
+    this.ctx[i].lineTo(0,npx(17));
+    this.ctx[i].closePath();
+    this.ctx[i].stroke();
+    //this.ctx[i].fill();
+    this.ctx[i].save();
+     
 }
 
 
 
 export default class Filter{
-   constructor(data,viewFn,layerEl) {
+   constructor(data,viewFn,layerEl,table,sheet) {
+       
+         this.table = table;
    	    //console.info("Filter create");
    	    let range = data.selector.range;
 
@@ -91,7 +167,8 @@ export default class Filter{
 	   	this.range.sri = eri;
 	   }
 	   if(this.range.sri!=0){
-           this.range.sri = this.range.sri-1;
+          //this.range.sri = this.range.sri-1;
+          this.range.sri=0; 
 	   }
 	   this.range.eri = this.range.sri;
 
@@ -112,10 +189,16 @@ export default class Filter{
        this.btn = {};
 
        this.areaEl={};
+       this.ctx ={};
        this.layerEl = layerEl;
        //console.info("range", this.range);
         
        this.setOffset();
+ 
+       this.menu = new FilterMenu(viewFn,table,layerEl,sheet,this);
+
+      
+       this.sheet = sheet;
   }
 
   setFreezeLengths(width, height) {
@@ -124,29 +207,46 @@ export default class Filter{
   }
 
   clear(){
+     this.table.order={};
   	 //console.info("clear");
   	 for(var i =  this.range.sci;i<= this.range.eci;i++){
   	 	//console.info("areaEl",this.areaEl[i]);
-  	 	if(this.areaEl[i]&&this.areaEl[i].parentNode){
-  	 	//console.info("compare node",this.areaEl[i].parentNode==this.layerEl);
-  	    }
+  	 
   	 	if(this.areaEl[i]&&this.areaEl[i].el.parentNode==this.layerEl.el){
-            if(this.btn[i]&&this.btn[i].ctx){
-            	 	
-				this.btn[i].ctx.clearRect(0,0,npx(17),npx(17));
+            if(this.btn[i]&&this.ctx[i]){
+            	console.info("clearRect"); 	
+				      this.ctx[i].clearRect(0,0,npx(17),npx(17));
             }
   	 	    this.layerEl.el.removeChild(this.areaEl[i].el);
   	    }
   	 }
+
+     if(this.menu&&this.menu.el&&this.menu.el.parentNode==this.layerEl.el){
+       this.layerEl.el.removeChild(this.menu.el);
+     }
+     console.info("clear done");
   }
 
+  change(key,ci){
+     if(key=="asc"||key=="desc"){
+       this.setOffset();
+     } 
+  }
+  setOrder(order){
+     this.order = order;
+  }
   showmenu(evt){
+       const {elOffset} = this;
        const ri = this.range.sri;
        //console.info("evt",evt);
        //console.info("ri",ri,"ci",evt.target.getAttribute("ci"));
        const ci = evt.target.getAttribute("ci");
-       //console.info("ri",ri,"ci",ci,);
+       console.info("evt.target",evt.target.parentNode.offsetLeft);
+
+       const {left,top} = {left:evt.target.parentNode.offsetLeft,top:evt.target.parentNode.offsetTop};
+     
        const cell = this.data.getCell(ri,ci);
+       this.menu.setPosition(left,top+npx(17),ci);
        //console.info("cell",cell);
   }
 
@@ -154,7 +254,7 @@ export default class Filter{
   setOffset() {
   
     const {
-      btn,freeze,areaEl,viewFn,data,range
+      btn,freeze,areaEl,viewFn,data,range,menu
     } = this;
     for(var i =  this.range.sci;i<= this.range.eci;i++){
       let offset = data.getRect({sri:this.range.sri, sci:i,eri:this.range.sri,eci:i} );
@@ -228,8 +328,9 @@ export default class Filter{
       areaEl[i].offset(elOffset);
        
       drawbtn.call(this,offset,i);
-
+      this.elOffset = elOffset;
       this.btn[i].on("click",(evt)=>this.showmenu.call(this,evt))
+     
 
      }
   }

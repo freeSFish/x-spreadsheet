@@ -413,7 +413,9 @@ function toolbarChange(type, value) {
     }
     this.filter = new Filter(data,
       () => this.getTableOffset(),
-      this.overlayerEl);
+      this.overlayerEl,
+      this.table,
+      this );
 
     // filter
   } else if (type === 'freeze') {
@@ -471,7 +473,7 @@ function sheetInitEvents() {
       overlayerTouch.call(this, direction, d);
     },
   });
-
+  
   // toolbar change
   toolbar.change = (type, value) => toolbarChange.call(this, type, value);
 
@@ -493,6 +495,8 @@ function sheetInitEvents() {
   editor.change = (state, itext) => {
     dataSetCellText.call(this, itext, state);
   };
+  
+
   // contextmenu
   contextMenu.itemClick = (type) => {
     // console.log('type:', type);
@@ -670,6 +674,7 @@ function sheetInitEvents() {
 
 export default class Sheet {
   constructor(targetEl, data) {
+    
     this.el = h('div', `${cssPrefix}-sheet`);
     this.toolbar = new Toolbar(data, !data.settings.showToolbar);
     targetEl.children(this.toolbar.el, this.el);
@@ -717,6 +722,12 @@ export default class Sheet {
     selectorSet.call(this, false, 0, 0);
 
 
+  }
+  
+  orderChange(data){
+    this.filter.setOrder(data);
+    sheetReset.call(this);
+    return this;
   }
 
   loadData(data) {

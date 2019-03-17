@@ -53,5 +53,5 @@ export default {
     max: 'Max',
     min: 'Min',
     concat: 'Concat',
-  },
+  }
 };

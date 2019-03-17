@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = merge(common, {
+module.exports = merge(common,{
   mode: 'development',
   plugins: [
     new CleanWebpackPlugin(['dist']),
@@ -19,6 +19,7 @@ module.exports = merge(common, {
       filename: '[name].[contenthash].css',
       // chunkFilename: devMode ? '[id].[hash].css' : '[id].css',
     }),
+ 
   ],
   output: {
     filename: '[name].[contenthash].js',

@@ -8,7 +8,13 @@ import { CellRange } from '../core/cell_range';
 import {
   Draw, DrawBox, thinLineWidth, npx,
 } from '../canvas/draw';
+
+
+
+
 // gobal var
+const dict = require('../pinyin/dict_common.js');
+const pinyin = require('../pinyin/pinyin.js')(dict);
 const cellPaddingWidth = 5;
 const tableFixedHeaderCleanStyle = { fillStyle: '#f4f5f8' };
 const tableGridStyle = {
@@ -16,6 +22,10 @@ const tableGridStyle = {
   lineWidth: thinLineWidth,
   strokeStyle: '#e6e6e6',
 };
+
+
+
+
 function tableFixedHeaderStyle() {
   return {
     textAlign: 'center',
@@ -243,7 +253,94 @@ class Table {
     this.el = el;
     this.draw = new Draw(el, data.viewWidth(), data.viewHeight());
     this.data = data;
+    this.odata = data.getData();
+    this.filter = {};
+    this.order = {};
   }
+
+  getFilter(){
+    return this.filter;
+  } 
+   
+  setFilter(filter){
+    this.filter = filter;
+  }
+  
+  getOrder(){
+
+
+    return this.order;
+  }
+
+  setOrder(order){
+    const{data} =this;
+
+    console.info("merges",data.merges.getData());
+    if(data.merges.getData()&&data.merges.getData().length>0){
+      alert("只有合并单元格内值相同，才能进行该操作！");
+      return false;
+    }
+    //if(checkMerge()){
+    //  alert("只有合并单元格内值相同，才能进行该操作！");
+    //  return false;
+    //}
+    this.order=order;
+
+ 
+    this.orderData.call(this,data);
+    
+    return true;
+  }
+
+  clearFilter(){
+    const{data,odata} =this;
+    data.setData(odata.getData());
+  } 
+
+  orderData(data){
+    const {order} = this;
+
+    const {key,value} = order;
+    if(key&&value){
+      console.info("data",data.rows);
+      let rows = data.rows.getData();
+      let rowarray = [];
+      console.info("rows",rows);
+      let firstrow = {};
+      for(var i in rows){
+        console.info("i",i);
+        if(i!=0){
+          rowarray.push(rows[i]);
+        }else{
+          firstrow = rows[i];
+        }
+      }
+      console.info(rowarray);
+      rowarray.sort((item1,item2)=>{
+        console.info("item1",item1);
+        console.info("pinyin",pinyin("测试"));
+        let c1 = item1.cells[key]&&pinyin(item1.cells[key]['text']).join('')||"";
+        let c2 = item2.cells[key]&&pinyin(item2.cells[key]['text']).join('')||"";
+        if(value=="asc"){
+          return c1.localeCompare(c2);
+        }
+        return c2.localeCompare(c1);
+      })
+      console.info(rowarray);
+      let orderedrows = {};
+      orderedrows[0] = firstrow; 
+      rowarray.forEach((i,it)=>{
+        console.info("i",i,"it",it);
+        orderedrows[it+1]=i;
+      });
+      console.info("orderedrows",orderedrows);
+      data.rows.setData(orderedrows);
+    }
+     
+    return data;
+  } 
+  
+
 
   render() {
     // resize canvas
