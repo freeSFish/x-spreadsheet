@@ -220,7 +220,7 @@ export default class Filter{
   	 	    this.layerEl.el.removeChild(this.areaEl[i].el);
   	    }
   	 }
-
+     this.ctx = {}; 
      if(this.menu&&this.menu.el&&this.menu.el.parentNode==this.layerEl.el){
        this.layerEl.el.removeChild(this.menu.el);
      }
